@@ -21,6 +21,8 @@ public class Driver {
 		publisher.register(user);
 		
 		publisher.notifyObservers("Hello Anurag", Priority.HIGH);
+		
+		publisher.shutdown();
 	}
 
 }

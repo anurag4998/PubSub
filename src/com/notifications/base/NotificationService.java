@@ -27,6 +27,10 @@ public class NotificationService {
 		.getNotificationChannels()
 		.forEach((channel) -> {
 			try {
+				//similate a 1/3 chance of failure
+				if(Math.floor(Math.random() * 3) == 2) {
+					throw new RuntimeException();
+				}
 				sendNotification(channel, notification , user);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

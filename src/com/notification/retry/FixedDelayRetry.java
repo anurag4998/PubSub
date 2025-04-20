@@ -47,6 +47,9 @@ public class FixedDelayRetry<V> implements IRetry<V> {
 		
 		if(tasksPending.size() > 0)
 			retry(tasksPending);
+		else {
+			scheduler.shutdown(); 	
+		}
 	}
 
 	private void removeFromMap(List<RetryableTask<V>> retryableTasksCompleted) {

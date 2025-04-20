@@ -63,9 +63,11 @@ public class Publisher implements ISubject {
 			});
 			
 			futureMap.put(submittedFuture, retryableTask);
-			//notifService.notifyUser(subscriber, notification);
 		}
 		retrySerivce.retry(futureMap);
 	}
-
+	
+	public void shutdown() {
+		fixedThreadPool.shutdown();
+	}
 }
