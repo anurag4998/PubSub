@@ -42,11 +42,11 @@ public class Publisher implements ISubject {
 
 	@Override
 	public void notifyObservers(String data, Priority priority) {
-		Notification notification = new Notification(UUID.randomUUID(), data, priority);
-		HashMap<Future<Boolean>, RetryableTask<Boolean>> futureMap = new HashMap<>();
+		final Notification notification = new Notification(UUID.randomUUID(), data, priority);
+		final HashMap<Future<Boolean>, RetryableTask<Boolean>> futureMap = new HashMap<>();
 		
 		for(IObservable subscriber : subscribers) {
-			RetryableTask<Boolean> retryableTask = new RetryableTask<>(() -> {
+			final RetryableTask<Boolean> retryableTask = new RetryableTask<>(() -> {
 				try {					
 					notifService.notifyUser(subscriber, notification);
 					return true;

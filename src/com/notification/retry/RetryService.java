@@ -20,7 +20,7 @@ public class RetryService<V> {
 		newSingleThreadExecutor.execute(() -> {
 			List<RetryableTask<V>> failedFutures = getFailedFutures(futureMap);
 			retryPolicy.retry(failedFutures);
-			newSingleThreadExecutor.shutdown(); // clean shutdown
+			newSingleThreadExecutor.shutdown();
 		});
 	}
 	

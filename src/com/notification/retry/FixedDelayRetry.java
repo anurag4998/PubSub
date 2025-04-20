@@ -15,7 +15,6 @@ public class FixedDelayRetry<V> implements IRetry<V> {
 	ConcurrentHashMap<RetryableTask<V>, Integer> retryMap = new ConcurrentHashMap<>();
 	@Override
 	public void retry(List<RetryableTask<V>> failedTasks) {
-		// TODO Auto-generated method stub
 		
 		if(failedTasks.size() == 0) {
 			return;
@@ -26,7 +25,7 @@ public class FixedDelayRetry<V> implements IRetry<V> {
 			retryMap.put(task, retryMap.getOrDefault(task, 0) + 1);
 		});
 		
-		List<Map<Future<V>, RetryableTask<V>>> mapOfFuture = failedTasks
+		List<Map<Future<V>, RetryableTask<V>>> mapOfFuture = failedTasksCopy
 		.stream()
 		.map((retryableTask) -> {
 			Future<V> future = scheduler.schedule(retryableTask.getTask(), 1, TimeUnit.MINUTES);
@@ -34,7 +33,7 @@ public class FixedDelayRetry<V> implements IRetry<V> {
 		})
 		.toList();
 		
-		List<RetryableTask<V>> retryableTasksCompleted = waitForFuturesToComplete(mapOfFuture.get(0));
+		List<RetryableTask<V>> retryableTasksCompleted = waitForFuturesToComplete(mapOfFuture);
 		removeFromMap(retryableTasksCompleted);
 		List<RetryableTask<V>> tasksPending = retryMap.keySet()
 		.stream()
@@ -56,18 +55,21 @@ public class FixedDelayRetry<V> implements IRetry<V> {
 		retryableTasksCompleted.forEach(task -> retryMap.remove(task));
 	}
 
-	private List<RetryableTask<V>> waitForFuturesToComplete(Map<Future<V>, RetryableTask<V>> mapOfFuture) {
+	private List<RetryableTask<V>> waitForFuturesToComplete(List<Map<Future<V>, RetryableTask<V>>> listOfMapOfFutures) {
 		List<RetryableTask<V>> completedTasks = new ArrayList<>();
-		for (Map.Entry<Future<V>, RetryableTask<V>> entry : mapOfFuture.entrySet()) {
-		    try {
-		        Boolean result = (boolean)entry.getKey().get(); // or add timeout
-		        if (result) {
-		        	completedTasks.add(entry.getValue());
-		        }
-		    } catch (Exception e) {
-		    	e.printStackTrace();
-		    }
-		}
+
+		listOfMapOfFutures.forEach((map) -> {
+			for (Map.Entry<Future<V>, RetryableTask<V>> entry : mapOfFuture.entrySet()) {
+				try {
+					Boolean result = (boolean)entry.getKey().get();
+					if (result) {
+						completedTasks.add(entry.getValue());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		return completedTasks;
 		
 	}
