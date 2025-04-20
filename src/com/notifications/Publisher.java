@@ -36,14 +36,12 @@ public class Publisher implements ISubject {
 
 	@Override
 	public boolean remove(IObservable obj) {
-		// TODO Auto-generated method stub
 		boolean isRemoved = subscribers.remove(obj);
 		return isRemoved;
 	}
 
 	@Override
 	public void notifyObservers(String data, Priority priority) {
-		// TODO Auto-generated method stub
 		Notification notification = new Notification(UUID.randomUUID(), data, priority);
 		HashMap<Future<Boolean>, RetryableTask<Boolean>> futureMap = new HashMap<>();
 		
