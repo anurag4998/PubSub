@@ -73,13 +73,10 @@ public class ExponentialRetry<V> implements IRetry<V> {
                 try {
                     Boolean result = (Boolean) future.get();
                     if(result) {
-                        // Task completed successfully
                         completedTasks.add(task);
-                    } else {
-                        // Task failed
                     }
                 } catch (Exception e) {
-                    // Handle exception
+                    e.printStackTrace();  
                 }
             }
         });
