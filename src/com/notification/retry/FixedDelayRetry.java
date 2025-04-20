@@ -58,7 +58,7 @@ public class FixedDelayRetry<V> implements IRetry<V> {
 	private List<RetryableTask<V>> waitForFuturesToComplete(List<Map<Future<V>, RetryableTask<V>>> listOfMapOfFutures) {
 		List<RetryableTask<V>> completedTasks = new ArrayList<>();
 
-		listOfMapOfFutures.forEach((map) -> {
+		listOfMapOfFutures.forEach((mapOfFuture) -> {
 			for (Map.Entry<Future<V>, RetryableTask<V>> entry : mapOfFuture.entrySet()) {
 				try {
 					Boolean result = (boolean)entry.getKey().get();
